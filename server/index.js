@@ -59,7 +59,7 @@ app.get('/values/current', async (req, res) => {
 });
 
 app.post('/values', async (req, res) => {
-  const index = req.body.value;   // index arg to fib(index) submitted by user
+  const index = req.body.index;   // index arg to fib(index) submitted by user
 
   if (parseInt(index) > 40) {
     return res.status(422).send('Index too high');
