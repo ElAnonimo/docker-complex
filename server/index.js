@@ -61,12 +61,16 @@ app.get('/values/current', async (req, res) => {
 app.post('/values', async (req, res) => {
   const index = req.body.index;   // index arg to fib(index) submitted by user
 
+  if (!index) {
+    return res.send('No index submitted');
+  }
+
   if (parseInt(index) > 40) {
     return res.status(422).send('Index too high');
   }
 
-  // 3rd arg 'No fib(index) values yet' is initial value for index. Later worker puts actual values there
-  redisClient.hset('values', index, 'No fib(index) values yet');
+  // 3rd arg 'Nothing yet!' is initial value for index. Later worker puts actual values there
+  redisClient.hset('values', index, 'Nothing yet!');
   // send message with index to worker
   redisPublisher.publish('insert', index);
 
