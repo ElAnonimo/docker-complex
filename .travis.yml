@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t elanonimo/docker-complex -f ./client/Dockerfile.dev ./client
+script:
+  - docker run elanonimo/docker-complex yarn run test --coverage
+# after the image was built successfully and the tests ran Ok we do after_success
+after_success:
+  # build production versions of client, nginx, server, worker using their Dockerfile(s)
+  - docker build -t elanonimo/docker-complex-client ./client
+  - docker build -t elanonimo/docker-complex-nginx ./nginx
+  - docker build -t elanonimo/docker-complex-server ./server
+  - docker build -t elanonimo/docker-complex-worker ./worker
+  # log in to Docker with CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # take images above and push them to Docker Hub
+  - docker push elanonimo/docker-complex-client
+  - docker push elanonimo/docker-complex-nginx
+  - docker push elanonimo/docker-complex-server
+  - docker push elanonimo/docker-complex-worker

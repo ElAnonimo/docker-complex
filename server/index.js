@@ -70,9 +70,9 @@ app.post('/values', async (req, res) => {
   }
 
   // 3rd arg 'Nothing yet!' is initial value for index. Later worker puts actual values there
-  redisClient.hset('values', index, 'Nothing yet!');
+  redisClient.hset('values', index, 'Nothing yet!', () => redisPublisher.publish('insert', index));
   // send message with index to worker
-  redisPublisher.publish('insert', index);
+  // redisPublisher.publish('insert', index);
 
   pgClient.query('INSERT INTO values(number) VALUES($1)', [index]);
   // just to let user know the fib value is being calculated

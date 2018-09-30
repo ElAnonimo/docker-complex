@@ -21,7 +21,9 @@ function fib(index) {
 // message is the index arg to fib(index). 'values' is the name of hash to store fib(index) values in
 sub.on('message', (channel, message) => {
   redisClient.hset('values', message, fib(parseInt(message)));
+  console.log('channel:', channel);
+  console.log('message:', message);
 });
 // subscribe to inserting values to Redis. The values is picked up by `sub.on('message', ...)` above
 // `sub.subscribe('insert')` subscribes to messages sent by server. See server/index.js, line 68 (`redisPublisher.publish('insert', index)`)
-sub.subscribe('insert');
+setTimeout(() => sub.subscribe('insert'), 3000);
