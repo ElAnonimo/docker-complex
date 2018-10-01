@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile.dev
       context: ./nginx
     ports:
-      - '3050:80'                     # port 3050 on laptop to receive incoming reqs to nginx server port 80
+      - '3050:80'                     # port 3050 on laptop to receive incoming reqs to nginx server on port 80
   postgres:
     image: 'postgres:latest'
   redis:
@@ -36,6 +36,9 @@ services:
       - /app/node_modules             # in the container don't override node_modules with that from the ./server folder
       - ./client:/app
   worker:
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     build:
       dockerfile: Dockerfile.dev
       context: ./worker
